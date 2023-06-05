@@ -6,3 +6,18 @@
     width: 700px;
     margin: auto;
 }
+
+.test-data {
+    border: 10px solid #f3f3f3;
+    padding: 10px;
+    margin: 0 0 20px 0 ;
+}
+
+.q {
+    border-bottom: 1px solid black;
+    font-weight: bold;
+}
+
+.a {
+    padding: 5px 0;
+}
