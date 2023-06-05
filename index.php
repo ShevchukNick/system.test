@@ -14,6 +14,7 @@ if (isset($_GET['test'])) {
     $test_data = get_test_data($tests_id);
     if (is_array($test_data)) {
         $count_questions = count($test_data);
+        $pagination= pagination($count_questions,$test_data);
     }
 }
 ?>
@@ -43,6 +44,7 @@ if (isset($_GET['test'])) {
             <?php if (isset($test_data)): ?>
                 <?php if (is_array($test_data)): ?>
                     <p>всего вопросов: <?= $count_questions ?></p>
+                    <?= $pagination ?>
                     <div class="test-data">
                         <?php foreach ($test_data as $id_question => $item): ?>
                             <div class="question" data-id="<?= $id_question ?>" id="question-<?= $id_question ?>">
@@ -60,6 +62,9 @@ if (isset($_GET['test'])) {
                             </div>
                         <?php endforeach; ?>
                     </div>
+                <div class="buttons">
+                    <button class="center btn">Закончить тест</button>
+                </div>
                 <?php else: ?>
                     тест в разработке
                 <?php endif; ?>
@@ -74,6 +79,8 @@ if (isset($_GET['test'])) {
 
 </div>
 
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="scripts.js"></script>
 
 </body>
 </html>

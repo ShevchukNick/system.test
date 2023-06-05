@@ -32,3 +32,18 @@ function get_test_data($test_id) {
     return $data;
 
 }
+
+function pagination($count_questions,$test_data) {
+    $keys=array_keys($test_data);
+    $pagination='<div class="pagination">';
+    for ($i=1;$i<=$count_questions;$i++) {
+        $key=array_shift($keys);
+        if ($i==1) {
+            $pagination .= '<a class="nav-active" href="#question-' . $key . '">' . $i . '</a>';
+        } else {
+            $pagination .= '<a  href="#question-' . $key . '">' . $i . '</a>';
+        }
+    }
+    $pagination .='</div>';
+    return $pagination;
+}
