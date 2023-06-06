@@ -4,17 +4,31 @@ error_reporting(-1);
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/functions.php';
 
+if (isset($_POST['test'])) {
+    $test=(int)$_POST['test'];
+    unset($_POST['test']);
+    $result = get_correct_answers($test);
+    print_r($_POST);
+    print_arr($result);
+    if (!is_array($result)){
+        exit('error');
+    }
+    $test_all_data=get_test_data($test);
+    print_arr($test_all_data);
+    die;
+}
+
 // list of tests
 $tests = get_tests();
 
 // проверям нажал ли юзер на ссылку с тестом
 if (isset($_GET['test'])) {
-    $tests_id = (int)$_GET['test'];
+    $test_id = (int)$_GET['test'];
 
-    $test_data = get_test_data($tests_id);
+    $test_data = get_test_data($test_id);
     if (is_array($test_data)) {
         $count_questions = count($test_data);
-        $pagination= pagination($count_questions,$test_data);
+        $pagination = pagination($count_questions, $test_data);
     }
 }
 ?>
@@ -32,7 +46,7 @@ if (isset($_GET['test'])) {
 <body>
 <div class="wrap">
     <?php if ($tests): ?>
-        <h1>список тестов</h1>
+        <h1> Доступные ТЕСТЫ</h1>
         <?php foreach ($tests as $test): ?>
             <p><a href="?test=<?= $test['id'] ?>"><?= $test['test_name'] ?></a></p>
         <?php endforeach; ?>
@@ -42,32 +56,32 @@ if (isset($_GET['test'])) {
         <div class="content">
 
             <?php if (isset($test_data)): ?>
-                <?php if (is_array($test_data)): ?>
-                    <p>всего вопросов: <?= $count_questions ?></p>
-                    <?= $pagination ?>
-                    <div class="test-data">
-                        <?php foreach ($test_data as $id_question => $item): ?>
-                            <div class="question" data-id="<?= $id_question ?>" id="question-<?= $id_question ?>">
-                                <?php foreach ($item as $id_answer => $answer): ?>
-                                    <?php if (!$id_answer): ?>
-                                        <p class="q"><?= $answer ?></p>
-                                    <?php else: ?>
-                                        <p class="a">
-                                            <input type="radio" id="answer-<?= $id_answer ?>"
-                                                   name="question-<?= $id_question ?>" value="<?= $id_answer ?>">
-                                            <label for="answer-<?= $id_answer ?>"><?= $answer ?></label>
-                                        </p>
-                                    <?php endif; ?>
-                                <?php endforeach; ?>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                <div class="buttons">
-                    <button class="center btn">Закончить тест</button>
+
+                <h2> name of test: <?= $_GET['test'] ?></h2>
+                <p>всего вопросов: <?= $count_questions ?></p>
+                <?= $pagination ?>
+                <span class="none" id="test-id"><?= $test_id ?></span>
+
+                <div class="test-data">
+                    <?php foreach ($test_data as $id_question => $item): ?>
+                        <div class="question" data-id="<?= $id_question ?>" id="question-<?= $id_question ?>">
+                            <?php foreach ($item as $id_answer => $answer): ?>
+                                <?php if (!$id_answer): ?>
+                                    <p class="q"><?= $answer ?></p>
+                                <?php else: ?>
+                                    <p class="a">
+                                        <input type="radio" id="answer-<?= $id_answer ?>"
+                                               name="question-<?= $id_question ?>" value="<?= $id_answer ?>">
+                                        <label for="answer-<?= $id_answer ?>"><?= $answer ?></label>
+                                    </p>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
-                <?php else: ?>
-                    тест в разработке
-                <?php endif; ?>
+                <div class="buttons">
+                    <button class="center btn" id="btn">Закончить тест</button>
+                </div>
             <?php else: ?>
                 Выберите тест
             <?php endif; ?>

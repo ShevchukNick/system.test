@@ -6,9 +6,10 @@ function print_arr($arr) {
 // получние названия тестов
 function get_tests() {
     global $pdo;
-    $res = $pdo->query("SELECT * FROM test");
+    $res = $pdo->query("SELECT * FROM test WHERE enable='1'");
+    if(!$res) return false;
     $data=[];
-    while ($row=$res->fetch(PDO::FETCH_ASSOC)) {
+    while ($row=$res->fetch()) {
         $data[]=$row;
     }
     return $data;
@@ -16,18 +17,21 @@ function get_tests() {
 
 // получние данных теста
 function get_test_data($test_id) {
-    if (!$test_id) return false;
+    if (!$test_id) return;
     global $pdo;
-    $query = "SELECT q.question,q.parent_test,a.id,a.answer,a.parent_question
-        FROM questions q 
-        LEFT JOIN answers a ON q.id=a.parent_question 
-        WHERE q.parent_test  = $test_id";
+    $query = "SELECT q.question, q.parent_test, a.id, a.answer, a.parent_question
+		FROM questions q
+		LEFT JOIN answers a
+			ON q.id = a.parent_question
+		LEFT JOIN test t 
+		    ON t.id=q.parent_test
+				WHERE q.parent_test = $test_id and t.enable='1'";
     $res=$pdo->query($query);
     $data=null;
-    while ($row=$res->fetch(PDO::FETCH_ASSOC)) {
+    while ($row=$res->fetch()) {
         if (!$row['parent_question']) return false;
-        $data[$row['parent_question']][0]=$row['question'];
-        $data[$row['parent_question']][$row['id']]= $row['answer'];
+        $data[$row['parent_question']][0] = $row['question'];
+        $data[$row['parent_question']][$row['id']] = $row['answer'];
     }
     return $data;
 
@@ -46,4 +50,24 @@ function pagination($count_questions,$test_data) {
     }
     $pagination .='</div>';
     return $pagination;
+}
+
+function get_correct_answers($test){
+    if (!$test) {
+        return false;
+    }
+    global $pdo;
+    $query = "SELECT q.id as question_id,a.id as answer_id
+                FROM questions q 
+                LEFT JOIN answers a
+                    ON q.id=a.parent_question
+                LEFT JOIN test
+                    ON test.id=q.parent_test
+                WHERE q.parent_test=$test AND a.correct_answer='1' AND test.enable='1'";
+    $res=$pdo->query($query);
+    $data=null;
+    while ($row=$res->fetch()) {
+        $data[$row['question_id']]=$row['answer_id'];
+    }
+    return $data;
 }
