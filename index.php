@@ -21,6 +21,7 @@ if (isset($_POST['test'])) {
 // list of tests
 $tests = get_tests();
 
+
 // проверям нажал ли юзер на ссылку с тестом
 if (isset($_GET['test'])) {
     $test_id = (int)$_GET['test'];
@@ -57,7 +58,7 @@ if (isset($_GET['test'])) {
 
             <?php if (isset($test_data)): ?>
 
-                <h2> name of test: <?= $_GET['test'] ?></h2>
+<!--                <h2> Выбранный тест: --><?php //= $test['test_name']?><!--</h2>-->
                 <p>всего вопросов: <?= $count_questions ?></p>
                 <?= $pagination ?>
                 <span class="none" id="test-id"><?= $test_id ?></span>
@@ -92,8 +93,6 @@ if (isset($_GET['test'])) {
     <?php endif; ?>
 
 </div>
-
-<p>test</p>
 
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="scripts.js"></script>
