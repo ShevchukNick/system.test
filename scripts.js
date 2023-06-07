@@ -26,7 +26,7 @@ $(function () {
             type: 'POST',
             data: res,
             success: function(html){
-                console.log(html);
+                $('.content').html(html);
             },
             error: function(){
                 alert('Error!');

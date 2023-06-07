@@ -8,13 +8,13 @@ if (isset($_POST['test'])) {
     $test=(int)$_POST['test'];
     unset($_POST['test']);
     $result = get_correct_answers($test);
-    print_r($_POST);
-    print_arr($result);
     if (!is_array($result)){
         exit('error');
     }
     $test_all_data=get_test_data($test);
-    print_arr($test_all_data);
+    $test_all_data_result=get_test_data_result($test_all_data,$result,$_POST);
+//    print_arr($test_all_data);
+    echo print_result($test_all_data_result);
     die;
 }
 
@@ -92,6 +92,8 @@ if (isset($_GET['test'])) {
     <?php endif; ?>
 
 </div>
+
+<p>test</p>
 
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="scripts.js"></script>
